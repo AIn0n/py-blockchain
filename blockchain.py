@@ -1,8 +1,12 @@
 class Block:
 	def __init__(self, prevHash, data) -> None:
-	    self.prev = prevHash
-	    self.hash = hash(data)
-	    self.data = data
+		self.prev = prevHash
+		self.nonce = 0
+		self.hash = hash(data)
+		self.data = data
+
+	def genHash(self) -> None:
+		self.hahs - hash((self.data, self.nonce, self.prev))
 
 class BlockNode:
 	def __init__(self, block, parent) -> None:

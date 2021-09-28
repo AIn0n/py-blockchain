@@ -1,4 +1,4 @@
-from blockchain import BlockChain
+from blockchain import Block, BlockChain, BlockNode
 import rsa
 
 class Transaction:
@@ -19,14 +19,37 @@ class Transaction:
 	def __repr__(self) -> str:
 	    return f'from {self.seller} to {self.receiver}\nhouse number = {self.num}\n'
 
-numbersAndKeys = [rsa.newkeys(512) for n in range(5)]
+def cmRec(node :BlockNode, result :dict) -> dict:
+	for tx in node.block.data:
+		if tx.verify():
+			result[tx.num] = tx.receiver
+	if len(node.children) > 0:
+		return cmRec(max(node.children, key= lambda x: x.height), result)
+	return result
+
+def checkMarket(bc :BlockChain) -> dict:
+	return cmRec(bc.root, dict())
+
+def mineBlock(bc :BlockChain, data :tuple) -> None:
+	block = Block(bc.getMaxHeightBlock().hash, data)
+	n = 0
+	while True:
+		block.nonce = n
+		block.genHash()
+		if str(block.hash)[-2:] == '00':
+			break
+		n += 1
+	bc.addBlock(block)
+
+agents = [rsa.newkeys(512) for n in range(5)]
 
 (ownerPk, ownerSk) = rsa.newkeys(512)
 genesisData = []
-for num, keyPair in enumerate(numbersAndKeys):
+for num, keyPair in enumerate(agents):
 	tx = Transaction(ownerPk, keyPair[0], num)
 	tx.sign(ownerSk)
 	genesisData.append(tx)
 
 bc = BlockChain(tuple(genesisData))
-print(bc)
+
+print(checkMarket(bc))
