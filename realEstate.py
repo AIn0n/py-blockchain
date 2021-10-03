@@ -19,16 +19,17 @@ class Transaction:
 	def __repr__(self) -> str:
 	    return f'from {self.seller} to {self.receiver}\nhouse number = {self.num}\n'
 
-def cmRec(node :BlockNode, result :dict) -> dict:
-	for tx in node.block.data:
-		if tx.verify():
-			result[tx.num] = tx.receiver
-	if len(node.children) > 0:
-		return cmRec(max(node.children, key= lambda x: x.height), result)
-	return result
-
 def checkMarket(bc :BlockChain) -> dict:
-	return cmRec(bc.root, dict())
+	node = bc.root
+	result = dict()
+	while True:
+		for tx in node.block.data:
+			if tx.verify():
+				result[tx.num] = tx.receiver
+		if len(node.children) < 1:
+			break
+		node = max(node.children, key= lambda x: x.height)
+	return result
 
 def mineBlock(bc :BlockChain, data :tuple) -> None:
 	block = Block(bc.getMaxHeightBlock().hash, data)

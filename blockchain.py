@@ -38,14 +38,13 @@ class BlockChain:
 			result += '----' * node.height + f'> {node}\n'
 		return result
 
-	def __getAllRec(self, nodes :list, result :list) -> list:
-		if len(nodes) == 0:
-			return result
-		node = nodes.pop()
-		return self.__getAllRec(nodes + node.children, result + [node])
-
 	def getAll(self) -> list:
-		return self.__getAllRec([self.root],[])
+		nodes, result = [self.root], []
+		while len(nodes) > 0:
+			node = nodes.pop()
+			result.append(node)
+			nodes.extend(node.children)
+		return result
 
 	def getMaxHeightBlock(self) -> Block:
 		return max(self.getAll(), key= lambda x :x.height).block
