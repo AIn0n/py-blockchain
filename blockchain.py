@@ -6,7 +6,7 @@ class Block:
 		self.data = data
 
 	def genHash(self) -> None:
-		self.hahs - hash((self.data, self.nonce, self.prev))
+		self.hash = hash((self.data, self.nonce, self.prev))
 
 class BlockNode:
 	def __init__(self, block, parent) -> None:

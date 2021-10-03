@@ -51,5 +51,11 @@ for num, keyPair in enumerate(agents):
 	genesisData.append(tx)
 
 bc = BlockChain(tuple(genesisData))
-
-print(checkMarket(bc))
+tx = Transaction(agents[0][0], agents[1][0], 0)
+tx.sign(agents[0][1])
+for k, v in checkMarket(bc).items():
+	print(f'house number = {k}, receiver = {v}')
+mineBlock(bc, tuple([tx]))
+print('transaction mined!')
+for k, v in checkMarket(bc).items():
+	print(f'house number = {k}, receiver = {v}')
