@@ -3,44 +3,28 @@ import rsa
 
 class Transaction:
 	def __init__(self, sellerPk, buyerPk, homeNum) -> None:
-		self.seller = sellerPk
-		self.receiver = buyerPk
-		self.num = homeNum
-		self.signature = None
+		# simple transaction construction
+		pass
+
 
 	def sign(self, sk) -> None:
-		encoded = f'{self.seller}{self.receiver}{self.num}'.encode()
-		self.signature = rsa.sign(encoded, sk, 'SHA-1')
-	
-	def verify(self) -> bool:
-		encoded = f'{self.seller}{self.receiver}{self.num}'.encode()
-		return rsa.verify(encoded, self.signature, self.seller)
+		# create rsa signature in transaction
+		pass
 
+	def verify(self) -> bool:
+		# verify signature
+		pass
 	def __repr__(self) -> str:
-	    return f'from {self.seller} to {self.receiver}\nhouse number = {self.num}\n'
+		# ez printing
+		pass
 
 def checkMarket(bc :BlockChain) -> dict:
-	node = bc.root
-	result = dict()
-	while True:
-		for tx in node.block.data:
-			if tx.verify():
-				result[tx.num] = tx.receiver
-		if len(node.children) < 1:
-			break
-		node = max(node.children, key= lambda x: x.height)
-	return result
+	# verify and check data in blockchain
+	pass
 
 def mineBlock(bc :BlockChain, data :tuple) -> None:
-	block = Block(bc.getMaxHeightBlock().hash, data)
-	n = 0
-	while True:
-		block.nonce = n
-		block.genHash()
-		if str(block.hash)[-2:] == '00':
-			break
-		n += 1
-	bc.addBlock(block)
+	# mine block with some proper proof-of-work-like alghoritm
+	pass
 
 agents = [rsa.newkeys(512) for n in range(5)]
 
